@@ -11,7 +11,11 @@ import { Card, Button } from '@/src/components/UI';
 import { cn } from '@/src/lib/utils';
 import { supabase } from '@/src/lib/supabase';
 
+import { useAuthStore } from '@/src/store';
+
 export const StaffManagement = () => {
+  const { user } = useAuthStore();
+  const isAdmin = user?.role === 'owner';
   const [staff, setStaff] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
@@ -127,7 +131,7 @@ export const StaffManagement = () => {
                   <div className="flex items-center gap-2">
                     {isUpdating === member.id && <Loader2 size={14} className="animate-spin text-brand-500" />}
                     <select 
-                      disabled={isUpdating === member.id || member.email === 'mukituislamnishat@gmail.com'}
+                      disabled={!isAdmin || isUpdating === member.id || member.email === 'mukituislamnishat@gmail.com'}
                       onChange={(e) => handleRoleChange(member.id, e.target.value)}
                       className="bg-transparent border-none text-sm font-bold text-brand-900 outline-none cursor-pointer disabled:opacity-50"
                       value={member.role}

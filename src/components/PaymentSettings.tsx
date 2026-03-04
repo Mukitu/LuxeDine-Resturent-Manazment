@@ -11,6 +11,8 @@ import { Card, Button, Input } from '@/src/components/UI';
 import { cn } from '@/src/lib/utils';
 import { supabase } from '@/src/lib/supabase';
 
+import { useAuthStore } from '@/src/store';
+
 const providers = [
   { id: 'bkash', name: 'bKash', color: 'bg-pink-500' },
   { id: 'nagad', name: 'Nagad', color: 'bg-orange-500' },
@@ -18,6 +20,8 @@ const providers = [
 ];
 
 export const PaymentSettings = () => {
+  const { user } = useAuthStore();
+  const isAdmin = user?.role === 'owner';
   const [settings, setSettings] = useState<Record<string, string>>({
     bkash: '',
     nagad: '',
@@ -86,7 +90,7 @@ export const PaymentSettings = () => {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-display font-bold text-brand-900">Payment Settings</h2>
-        <Button onClick={handleSave} isLoading={isSaving}>
+        <Button onClick={handleSave} isLoading={isSaving} disabled={!isAdmin}>
           <Save size={18} className="mr-2" />
           Save Changes
         </Button>
@@ -121,6 +125,7 @@ export const PaymentSettings = () => {
                   value={settings[provider.id]} 
                   onChange={(e) => setSettings({...settings, [provider.id]: e.target.value})}
                   placeholder="Enter number"
+                  disabled={!isAdmin}
                 />
               </div>
               <div className="flex items-center gap-2 text-xs text-brand-500">

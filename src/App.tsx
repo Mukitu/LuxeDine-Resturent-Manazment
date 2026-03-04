@@ -17,6 +17,7 @@ import { Dashboard } from '@/src/components/Dashboard';
 import { CustomerMenu, CartDrawer } from '@/src/components/Customer';
 import { OrderManagement } from '@/src/components/Orders';
 import { TableManagement } from '@/src/components/Tables';
+import { MenuManagement } from '@/src/components/MenuManagement';
 import { StaffManagement } from '@/src/components/Staff';
 import { PaymentSettings } from '@/src/components/PaymentSettings';
 import { Button, Card, Input } from '@/src/components/UI';
@@ -238,6 +239,9 @@ export default function App() {
           <main className="p-8 overflow-y-auto">
             {activeTab === 'dashboard' && <Dashboard />}
             {activeTab === 'menu' && (
+              <MenuManagement />
+            )}
+            {activeTab === 'tables' && (
               <TableManagement />
             )}
             {activeTab === 'orders' && (

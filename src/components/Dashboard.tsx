@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { 
   TrendingUp, 
@@ -6,7 +6,8 @@ import {
   ShoppingBag, 
   Clock,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Loader2
 } from 'lucide-react';
 import { Card } from '@/src/components/UI';
 import { 
@@ -20,17 +21,8 @@ import {
   BarChart,
   Bar
 } from 'recharts';
-import { formatCurrency } from '@/src/lib/utils';
-
-const data = [
-  { name: 'Mon', revenue: 4000, orders: 24 },
-  { name: 'Tue', revenue: 3000, orders: 18 },
-  { name: 'Wed', revenue: 2000, orders: 12 },
-  { name: 'Thu', revenue: 2780, orders: 20 },
-  { name: 'Fri', revenue: 1890, orders: 15 },
-  { name: 'Sat', revenue: 2390, orders: 25 },
-  { name: 'Sun', revenue: 3490, orders: 30 },
-];
+import { formatCurrency, cn } from '@/src/lib/utils';
+import { supabase } from '@/src/lib/supabase';
 
 const StatCard = ({ title, value, icon: Icon, trend, trendValue }: any) => (
   <Card className="relative overflow-hidden group">
@@ -56,9 +48,62 @@ const StatCard = ({ title, value, icon: Icon, trend, trendValue }: any) => (
   </Card>
 );
 
-import { cn } from '@/src/lib/utils';
-
 export const Dashboard = () => {
+  const [stats, setStats] = useState({
+    revenue: 0,
+    orders: 0,
+    customers: 0,
+    prepTime: 0
+  });
+  const [chartData, setChartData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      setIsLoading(true);
+      try {
+        // Fetch real stats from Supabase
+        const { data: orders } = await supabase.from('orders').select('total_amount, status');
+        const { count: customerCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+        
+        const totalRevenue = orders?.reduce((acc, o) => acc + (o.status === 'completed' ? Number(o.total_amount) : 0), 0) || 0;
+        const totalOrders = orders?.length || 0;
+
+        setStats({
+          revenue: totalRevenue,
+          orders: totalOrders,
+          customers: customerCount || 0,
+          prepTime: 15 // Mock for now as we don't track prep time yet
+        });
+
+        // Empty chart data for now
+        setChartData([
+          { name: 'Mon', revenue: 0, orders: 0 },
+          { name: 'Tue', revenue: 0, orders: 0 },
+          { name: 'Wed', revenue: 0, orders: 0 },
+          { name: 'Thu', revenue: 0, orders: 0 },
+          { name: 'Fri', revenue: 0, orders: 0 },
+          { name: 'Sat', revenue: 0, orders: 0 },
+          { name: 'Sun', revenue: 0, orders: 0 },
+        ]);
+      } catch (error) {
+        console.error('Error fetching dashboard stats:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="h-96 flex items-center justify-center">
+        <Loader2 className="animate-spin text-brand-500" size={40} />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex items-end justify-between">
@@ -66,43 +111,36 @@ export const Dashboard = () => {
           <h2 className="text-3xl font-display font-bold text-brand-900">Overview</h2>
           <p className="text-brand-500">Welcome back! Here's what's happening today.</p>
         </div>
-        <div className="flex gap-3">
-          <select className="bg-white border border-brand-200 rounded-xl px-4 py-2 text-sm outline-none">
-            <option>Last 7 Days</option>
-            <option>Last 30 Days</option>
-            <option>This Month</option>
-          </select>
-        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
           title="Total Revenue" 
-          value={formatCurrency(12840)} 
+          value={formatCurrency(stats.revenue)} 
           icon={TrendingUp} 
           trend="up" 
-          trendValue="12.5" 
+          trendValue="0" 
         />
         <StatCard 
           title="Total Orders" 
-          value="482" 
+          value={stats.orders} 
           icon={ShoppingBag} 
           trend="up" 
-          trendValue="8.2" 
+          trendValue="0" 
         />
         <StatCard 
           title="Active Customers" 
-          value="1,240" 
+          value={stats.customers} 
           icon={Users} 
-          trend="down" 
-          trendValue="3.1" 
+          trend="up" 
+          trendValue="0" 
         />
         <StatCard 
           title="Avg. Prep Time" 
-          value="18 min" 
+          value={`${stats.prepTime} min`} 
           icon={Clock} 
           trend="up" 
-          trendValue="2.4" 
+          trendValue="0" 
         />
       </div>
 
@@ -110,7 +148,7 @@ export const Dashboard = () => {
         <Card className="h-[400px]">
           <h4 className="text-lg font-bold mb-6">Revenue Analytics</h4>
           <ResponsiveContainer width="100%" height="85%">
-            <AreaChart data={data}>
+            <AreaChart data={chartData}>
               <defs>
                 <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#0f172a" stopOpacity={0.1}/>
@@ -131,7 +169,7 @@ export const Dashboard = () => {
         <Card className="h-[400px]">
           <h4 className="text-lg font-bold mb-6">Orders by Day</h4>
           <ResponsiveContainer width="100%" height="85%">
-            <BarChart data={data}>
+            <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
               <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />

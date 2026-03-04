@@ -10,7 +10,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Bell,
-  Search
+  Search,
+  QrCode
 } from 'lucide-react';
 import { useAuthStore } from '@/src/store';
 import { cn } from '@/src/lib/utils';
@@ -22,9 +23,10 @@ export const Sidebar = ({ activeTab, setActiveTab }: { activeTab: string; setAct
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['owner', 'manager', 'waiter'] },
     { id: 'menu', label: 'Menu Management', icon: UtensilsCrossed, roles: ['owner', 'manager'] },
+    { id: 'tables', label: 'Table Management', icon: QrCode, roles: ['owner', 'manager', 'waiter'] },
     { id: 'orders', label: 'Orders', icon: ClipboardList, roles: ['owner', 'manager', 'waiter'] },
     { id: 'staff', label: 'Staff', icon: Users, roles: ['owner'] },
-    { id: 'settings', label: 'Settings', icon: Settings, roles: ['owner', 'manager'] },
+    { id: 'settings', label: 'Settings', icon: Settings, roles: ['owner'] },
   ];
 
   const filteredItems = menuItems.filter(item => item.roles.includes(user?.role || ''));
