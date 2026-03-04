@@ -1,0 +1,8 @@
+{
+  "name": "LuxeDine - Premium Restaurant OS",
+  "description": "An ultra-premium Restaurant Management, Smart Ordering, and QR Table Ordering SaaS platform.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}
