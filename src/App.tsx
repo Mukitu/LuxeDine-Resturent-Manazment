@@ -8,7 +8,8 @@ import {
   LayoutDashboard,
   QrCode,
   Home,
-  UtensilsCrossed
+  UtensilsCrossed,
+  LogOut
 } from 'lucide-react';
 import { useAuthStore, useCartStore } from '@/src/store';
 import { supabase } from '@/src/lib/supabase';
@@ -29,6 +30,7 @@ export default function App() {
   const { items, isCartOpen, setCartOpen } = useCartStore();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [customerTab, setCustomerTab] = useState<'menu' | 'dashboard'>('menu');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const [loginEmail, setLoginEmail] = useState('');
@@ -118,23 +120,25 @@ export default function App() {
   if (!user) {
     return (
       <div className="min-h-screen bg-brand-50 flex flex-col">
-        <nav className="h-24 bg-transparent absolute top-0 left-0 right-0 px-8 flex items-center justify-between z-50">
-          <h1 className="text-3xl font-display font-bold tracking-tighter text-white">
+        <nav className="h-20 lg:h-24 bg-brand-950 lg:bg-transparent absolute top-0 left-0 right-0 px-4 lg:px-8 flex items-center justify-between z-50">
+          <h1 className="text-2xl lg:text-3xl font-display font-bold tracking-tighter text-white">
             Luxe<span className="text-brand-400">Dine</span>
           </h1>
-          <div className="flex items-center gap-8">
-            <button className="text-white/80 font-bold text-sm tracking-widest uppercase hover:text-white transition-colors">Menu</button>
-            <button className="text-white/80 font-bold text-sm tracking-widest uppercase hover:text-white transition-colors">Experience</button>
-            <button className="text-white/80 font-bold text-sm tracking-widest uppercase hover:text-white transition-colors">Contact</button>
-            <div className="h-4 w-px bg-white/20 mx-2" />
-            <Button variant="secondary" className="bg-white/10 border-white/20 text-white hover:bg-white/20" onClick={() => setIsLoginOpen(true)}>Login</Button>
+          <div className="flex items-center gap-2 lg:gap-8">
+            <div className="hidden lg:flex items-center gap-8">
+              <button className="text-white/80 font-bold text-sm tracking-widest uppercase hover:text-white transition-colors">Menu</button>
+              <button className="text-white/80 font-bold text-sm tracking-widest uppercase hover:text-white transition-colors">Experience</button>
+              <button className="text-white/80 font-bold text-sm tracking-widest uppercase hover:text-white transition-colors">Contact</button>
+              <div className="h-4 w-px bg-white/20 mx-2" />
+            </div>
+            <Button variant="secondary" size="sm" className="bg-white/10 border-white/20 text-white hover:bg-white/20" onClick={() => setIsLoginOpen(true)}>Login</Button>
             <button 
               onClick={() => setCartOpen(true)}
-              className="p-4 bg-white text-brand-950 rounded-full relative hover:scale-110 transition-transform shadow-xl"
+              className="p-3 lg:p-4 bg-white text-brand-950 rounded-full relative hover:scale-110 transition-transform shadow-xl"
             >
-              <ShoppingBag size={20} />
+              <ShoppingBag size={18} lg:size={20} />
               {items.length > 0 && (
-                <span className="absolute -top-1 -right-1 w-6 h-6 bg-brand-400 text-brand-950 text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">
+                <span className="absolute -top-1 -right-1 w-5 h-5 lg:w-6 lg:h-6 bg-brand-400 text-brand-950 text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">
                   {items.length}
                 </span>
               )}
@@ -260,10 +264,15 @@ export default function App() {
   if (user.role !== 'customer') {
     return (
       <div className="flex min-h-screen bg-brand-50">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-        <div className="flex-1 flex flex-col">
-          <TopBar />
-          <main className="p-8 overflow-y-auto">
+        <Sidebar 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab} 
+          isMobileOpen={isMobileMenuOpen}
+          setIsMobileOpen={setIsMobileMenuOpen}
+        />
+        <div className="flex-1 flex flex-col min-w-0">
+          <TopBar onMenuClick={() => setIsMobileMenuOpen(true)} />
+          <main className="p-4 lg:p-8 overflow-y-auto">
             {activeTab === 'dashboard' && <Dashboard />}
             {activeTab === 'menu' && (
               <MenuManagement />
@@ -289,16 +298,16 @@ export default function App() {
   // Logged in Customer View
   return (
     <div className="min-h-screen bg-brand-50">
-      <nav className="h-20 bg-white/50 backdrop-blur-md border-b border-brand-100 px-8 flex items-center justify-between sticky top-0 z-50">
-        <h1 className="text-3xl font-display font-bold tracking-tighter text-brand-900 cursor-pointer" onClick={() => setCustomerTab('menu')}>
+      <nav className="h-20 bg-white/50 backdrop-blur-md border-b border-brand-100 px-4 lg:px-8 flex items-center justify-between sticky top-0 z-50">
+        <h1 className="text-2xl lg:text-3xl font-display font-bold tracking-tighter text-brand-900 cursor-pointer" onClick={() => setCustomerTab('menu')}>
           Luxe<span className="text-brand-500">Dine</span>
         </h1>
-        <div className="flex items-center gap-6">
-          <div className="flex gap-4 mr-4">
+        <div className="flex items-center gap-2 lg:gap-6">
+          <div className="flex gap-2 lg:gap-4 mr-2 lg:mr-4">
             <button 
               onClick={() => setCustomerTab('menu')}
               className={cn(
-                "text-sm font-bold uppercase tracking-widest transition-colors",
+                "text-[10px] lg:text-sm font-bold uppercase tracking-widest transition-colors",
                 customerTab === 'menu' ? "text-brand-900" : "text-brand-400 hover:text-brand-600"
               )}
             >
@@ -307,29 +316,32 @@ export default function App() {
             <button 
               onClick={() => setCustomerTab('dashboard')}
               className={cn(
-                "text-sm font-bold uppercase tracking-widest transition-colors",
+                "text-[10px] lg:text-sm font-bold uppercase tracking-widest transition-colors",
                 customerTab === 'dashboard' ? "text-brand-900" : "text-brand-400 hover:text-brand-600"
               )}
             >
-              My Orders
+              Orders
             </button>
           </div>
-          <div className="flex items-center gap-3 px-4 py-2 bg-brand-100 rounded-full">
+          <div className="hidden sm:flex items-center gap-3 px-4 py-2 bg-brand-100 rounded-full">
             <User size={18} className="text-brand-600" />
             <span className="text-sm font-medium">{user.full_name}</span>
           </div>
           <button 
             onClick={() => setCartOpen(true)}
-            className="p-3 bg-brand-900 text-white rounded-full relative hover:scale-110 transition-transform"
+            className="p-2 lg:p-3 bg-brand-900 text-white rounded-full relative hover:scale-110 transition-transform"
           >
-            <ShoppingBag size={20} />
+            <ShoppingBag size={18} lg:size={20} />
             {items.length > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">
+              <span className="absolute -top-1 -right-1 w-4 h-4 lg:w-5 lg:h-5 bg-emerald-500 text-[8px] lg:text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">
                 {items.length}
               </span>
             )}
           </button>
-          <Button variant="ghost" onClick={handleLogout}>Logout</Button>
+          <Button variant="ghost" size="sm" onClick={handleLogout} className="hidden sm:flex">Logout</Button>
+          <button onClick={handleLogout} className="p-2 text-brand-400 sm:hidden">
+            <LogOut size={20} />
+          </button>
         </div>
       </nav>
       <main>

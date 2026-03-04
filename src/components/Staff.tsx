@@ -72,9 +72,9 @@ export const StaffManagement = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-display font-bold text-brand-900">Staff & Permissions</h2>
-        <Button size="sm">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h2 className="text-2xl lg:text-3xl font-display font-bold text-brand-900">Staff & Permissions</h2>
+        <Button size="sm" className="w-full sm:w-auto">
           <UserPlus size={18} className="mr-2" />
           Invite Staff
         </Button>
@@ -96,17 +96,17 @@ export const StaffManagement = () => {
 
       <div className="grid grid-cols-1 gap-4">
         {staff.map((member) => (
-          <Card key={member.id} className="hover:shadow-lg transition-shadow">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-6">
-                <div className="w-14 h-14 bg-brand-100 rounded-2xl flex items-center justify-center text-brand-900 font-bold text-xl">
+          <Card key={member.id} className="hover:shadow-lg transition-shadow p-4 lg:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div className="flex items-center gap-4 lg:gap-6">
+                <div className="w-12 h-12 lg:w-14 lg:h-14 bg-brand-100 rounded-2xl flex items-center justify-center text-brand-900 font-bold text-lg lg:text-xl shrink-0">
                   {member.full_name?.charAt(0) || 'U'}
                 </div>
-                <div>
-                  <div className="flex items-center gap-3 mb-1">
-                    <h4 className="font-bold text-lg">{member.full_name || 'Anonymous User'}</h4>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 lg:gap-3 mb-1">
+                    <h4 className="font-bold text-base lg:text-lg truncate">{member.full_name || 'Anonymous User'}</h4>
                     <span className={cn(
-                      "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest",
+                      "px-2 lg:px-3 py-0.5 lg:py-1 rounded-full text-[8px] lg:text-[10px] font-bold uppercase tracking-widest",
                       member.role === 'owner' ? "bg-brand-950 text-white" :
                       member.role === 'manager' ? "bg-blue-100 text-blue-700" :
                       member.role === 'waiter' ? "bg-emerald-100 text-emerald-700" :
@@ -115,25 +115,25 @@ export const StaffManagement = () => {
                       {member.role}
                     </span>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-brand-500">
-                    <span className="flex items-center gap-1"><Mail size={14} /> {member.email}</span>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-[10px] lg:text-sm text-brand-500">
+                    <span className="flex items-center gap-1 truncate"><Mail size={12} /> {member.email}</span>
                     <span className="flex items-center gap-1">
-                      <Calendar size={14} /> 
+                      <Calendar size={12} /> 
                       Joined {new Date(member.created_at).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
-                <div className="flex flex-col items-end mr-4">
-                  <span className="text-xs text-brand-400 font-bold uppercase tracking-tighter">Change Role</span>
+              <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-none pt-4 sm:pt-0">
+                <div className="flex flex-col items-start sm:items-end">
+                  <span className="text-[10px] text-brand-400 font-bold uppercase tracking-tighter">Change Role</span>
                   <div className="flex items-center gap-2">
-                    {isUpdating === member.id && <Loader2 size={14} className="animate-spin text-brand-500" />}
+                    {isUpdating === member.id && <Loader2 size={12} className="animate-spin text-brand-500" />}
                     <select 
                       disabled={!isAdmin || isUpdating === member.id || member.email === 'mukituislamnishat@gmail.com'}
                       onChange={(e) => handleRoleChange(member.id, e.target.value)}
-                      className="bg-transparent border-none text-sm font-bold text-brand-900 outline-none cursor-pointer disabled:opacity-50"
+                      className="bg-transparent border-none text-xs lg:text-sm font-bold text-brand-900 outline-none cursor-pointer disabled:opacity-50"
                       value={member.role}
                     >
                       <option value="owner">Owner</option>

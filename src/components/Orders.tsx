@@ -115,13 +115,13 @@ export const OrderManagement = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-display font-bold text-brand-900">Live Orders</h2>
-          <p className="text-brand-500">Monitor and manage incoming orders in real-time.</p>
+          <h2 className="text-2xl lg:text-3xl font-display font-bold text-brand-900">Live Orders</h2>
+          <p className="text-brand-500 text-sm lg:text-base">Monitor and manage incoming orders in real-time.</p>
         </div>
-        <div className="flex gap-4">
-          <Button variant="outline" size="sm">
+        <div className="flex gap-4 w-full sm:w-auto">
+          <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
             <Printer size={18} className="mr-2" />
             Print All
           </Button>
@@ -141,15 +141,15 @@ export const OrderManagement = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
             >
-              <Card className="hover:shadow-2xl transition-shadow cursor-pointer group">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 bg-brand-100 rounded-2xl flex items-center justify-center text-brand-900 font-bold">
+              <Card className="hover:shadow-2xl transition-shadow cursor-pointer group p-4 lg:p-6">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                  <div className="flex items-start lg:items-center gap-4 lg:gap-6">
+                    <div className="w-12 h-12 lg:w-16 lg:h-16 bg-brand-100 rounded-2xl flex items-center justify-center text-brand-900 font-bold shrink-0">
                       {order.restaurant_tables?.table_number || 'DL'}
                     </div>
-                    <div>
-                      <div className="flex items-center gap-3 mb-1">
-                        <h4 className="font-bold text-lg">#{order.id?.slice(0, 8) || '...'}</h4>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2 lg:gap-3 mb-1">
+                        <h4 className="font-bold text-base lg:text-lg truncate">#{order.id?.slice(0, 8) || '...'}</h4>
                         <StatusBadge status={order.status} />
                         <span className={cn(
                           "px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider",
@@ -158,35 +158,31 @@ export const OrderManagement = () => {
                           {order.order_type || 'Dine-in'}
                         </span>
                       </div>
-                      <p className="text-sm text-brand-500">
+                      <p className="text-xs lg:text-sm text-brand-500 line-clamp-2">
                         {order.profiles?.full_name || 'Guest'} • {order.order_items?.map((i: any) => `${i.food_items?.name} x${i.quantity}`).join(', ')}
                       </p>
                       {order.order_type === 'delivery' && order.delivery_address && (
-                        <p className="text-xs text-brand-400 mt-1 italic">
-                          Address: {order.delivery_address} • Phone: {order.customer_phone || 'N/A'}
-                        </p>
-                      )}
-                      {order.order_type === 'dine-in' && order.customer_phone && (
-                        <p className="text-xs text-brand-400 mt-1 italic">
-                          Phone: {order.customer_phone}
+                        <p className="text-[10px] lg:text-xs text-brand-400 mt-1 italic line-clamp-1">
+                          Address: {order.delivery_address}
                         </p>
                       )}
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-8">
-                    <div className="text-right">
-                      <p className="text-lg font-bold text-brand-900">{formatCurrency(order.total_amount)}</p>
-                      <p className="text-xs text-brand-400 flex items-center justify-end gap-1">
+                  <div className="flex flex-row lg:flex-row items-center justify-between lg:justify-end gap-4 lg:gap-8 border-t lg:border-none pt-4 lg:pt-0">
+                    <div className="text-left lg:text-right">
+                      <p className="text-base lg:text-lg font-bold text-brand-900">{formatCurrency(order.total_amount)}</p>
+                      <p className="text-[10px] lg:text-xs text-brand-400 flex items-center lg:justify-end gap-1">
                         <Clock size={12} />
                         {order.created_at ? new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A'}
                       </p>
                     </div>
-                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex gap-2 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                       {order.status === 'pending' && (
                         <Button 
                           variant="secondary" 
                           size="sm" 
+                          className="h-8 px-3 text-xs"
                           onClick={(e) => {
                             e.stopPropagation();
                             updateStatus(order.id, 'preparing');
@@ -199,6 +195,7 @@ export const OrderManagement = () => {
                         <Button 
                           variant="secondary" 
                           size="sm" 
+                          className="h-8 px-3 text-xs"
                           onClick={(e) => {
                             e.stopPropagation();
                             updateStatus(order.id, 'ready');
@@ -211,6 +208,7 @@ export const OrderManagement = () => {
                         <Button 
                           variant="secondary" 
                           size="sm" 
+                          className="h-8 px-3 text-xs"
                           onClick={(e) => {
                             e.stopPropagation();
                             updateStatus(order.id, 'completed');
@@ -219,22 +217,10 @@ export const OrderManagement = () => {
                           Complete
                         </Button>
                       )}
-                      {isAdmin && (
-                        <Button 
-                          variant="secondary" 
-                          size="icon" 
-                          className="text-red-500 hover:bg-red-50"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteOrder(order.id);
-                          }}
-                        >
-                          <Trash2 size={18} />
-                        </Button>
-                      )}
                       <Button 
                         variant="secondary" 
                         size="icon"
+                        className="h-8 w-8"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (confirm('Cancel this order?')) {
@@ -242,10 +228,10 @@ export const OrderManagement = () => {
                           }
                         }}
                       >
-                        <MoreVertical size={18} />
+                        <MoreVertical size={16} />
                       </Button>
                     </div>
-                    <ChevronRight size={20} className="text-brand-300" />
+                    <ChevronRight size={20} className="text-brand-300 hidden lg:block" />
                   </div>
                 </div>
               </Card>

@@ -127,12 +127,12 @@ export const TableManagement = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-display font-bold text-brand-900">Tables & QR Codes</h2>
-          <p className="text-brand-500">Manage your restaurant layout and generate ordering QR codes.</p>
+          <h2 className="text-2xl lg:text-3xl font-display font-bold text-brand-900">Tables & QR Codes</h2>
+          <p className="text-brand-500 text-sm lg:text-base">Manage your restaurant layout and generate ordering QR codes.</p>
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>
+        <Button onClick={() => setIsModalOpen(true)} size="sm" className="w-full sm:w-auto">
           <Plus size={18} className="mr-2" />
           Add Table
         </Button>

@@ -112,10 +112,10 @@ export const Dashboard = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-end justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-display font-bold text-brand-900">Overview</h2>
-          <p className="text-brand-500">Welcome back! Here's what's happening today.</p>
+          <h2 className="text-2xl lg:text-3xl font-display font-bold text-brand-900">Overview</h2>
+          <p className="text-brand-500 text-sm lg:text-base">Welcome back! Here's what's happening today.</p>
         </div>
       </div>
 
@@ -151,7 +151,7 @@ export const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Card className="h-[400px]">
+        <Card className="h-[300px] lg:h-[400px]">
           <h4 className="text-lg font-bold mb-6">Revenue Analytics</h4>
           <ResponsiveContainer width="100%" height="85%">
             <AreaChart data={chartData}>
@@ -172,7 +172,7 @@ export const Dashboard = () => {
           </ResponsiveContainer>
         </Card>
 
-        <Card className="h-[400px]">
+        <Card className="h-[300px] lg:h-[400px]">
           <h4 className="text-lg font-bold mb-6">Orders by Day</h4>
           <ResponsiveContainer width="100%" height="85%">
             <BarChart data={chartData}>

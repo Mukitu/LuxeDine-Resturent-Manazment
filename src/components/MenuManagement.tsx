@@ -192,19 +192,19 @@ export const MenuManagement = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-display font-bold text-brand-900">Menu Management</h2>
-          <p className="text-brand-500">Manage your restaurant's food and drink offerings.</p>
+          <h2 className="text-2xl lg:text-3xl font-display font-bold text-brand-900">Menu Management</h2>
+          <p className="text-brand-500 text-sm lg:text-base">Manage your restaurant's food and drink offerings.</p>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={() => setIsCatModalOpen(true)}>
-            <Plus size={18} className="mr-2" />
-            Add Category
+        <div className="flex flex-wrap gap-2 sm:gap-3">
+          <Button variant="outline" size="sm" onClick={() => setIsCatModalOpen(true)} className="flex-1 sm:flex-none">
+            <Plus size={16} className="mr-1 sm:mr-2" />
+            Category
           </Button>
-          <Button onClick={() => setIsModalOpen(true)}>
-            <Plus size={18} className="mr-2" />
-            Add New Item
+          <Button size="sm" onClick={() => setIsModalOpen(true)} className="flex-1 sm:flex-none">
+            <Plus size={16} className="mr-1 sm:mr-2" />
+            Add Item
           </Button>
         </div>
       </div>

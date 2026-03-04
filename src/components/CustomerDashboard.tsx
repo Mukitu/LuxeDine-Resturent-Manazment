@@ -57,30 +57,30 @@ export const CustomerDashboard = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
+    <div className="max-w-7xl mx-auto px-4 py-8 lg:py-12">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 lg:mb-12 gap-6">
         <div>
-          <h2 className="text-4xl font-display font-bold text-brand-900 mb-2">Welcome back, {user?.full_name}</h2>
-          <p className="text-brand-500">Track your orders and manage your dining experience.</p>
+          <h2 className="text-2xl lg:text-4xl font-display font-bold text-brand-900 mb-2">Welcome back, {user?.full_name}</h2>
+          <p className="text-brand-500 text-sm lg:text-base">Track your orders and manage your dining experience.</p>
         </div>
         <div className="flex gap-4">
-          <Card className="flex items-center gap-4 px-6 py-4 bg-white shadow-sm border-none">
-            <div className="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center text-brand-600">
-              <Package size={24} />
+          <Card className="flex items-center gap-4 px-4 lg:px-6 py-3 lg:py-4 bg-white shadow-sm border-none w-full lg:w-auto">
+            <div className="w-10 h-10 lg:w-12 lg:h-12 bg-brand-100 rounded-full flex items-center justify-center text-brand-600 shrink-0">
+              <Package size={20} />
             </div>
             <div>
-              <p className="text-xs font-bold text-brand-400 uppercase tracking-widest">Total Orders</p>
-              <p className="text-2xl font-bold text-brand-900">{orders.length}</p>
+              <p className="text-[10px] font-bold text-brand-400 uppercase tracking-widest">Total Orders</p>
+              <p className="text-xl lg:text-2xl font-bold text-brand-900">{orders.length}</p>
             </div>
           </Card>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center gap-2 mb-4">
-            <History className="text-brand-900" size={24} />
-            <h3 className="text-2xl font-display font-bold text-brand-900">Order History</h3>
+            <History className="text-brand-900" size={20} />
+            <h3 className="text-xl lg:text-2xl font-display font-bold text-brand-900">Order History</h3>
           </div>
 
           {isLoading ? (

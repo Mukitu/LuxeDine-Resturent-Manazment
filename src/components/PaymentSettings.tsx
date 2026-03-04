@@ -88,9 +88,9 @@ export const PaymentSettings = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-display font-bold text-brand-900">Payment Settings</h2>
-        <Button onClick={handleSave} isLoading={isSaving} disabled={!isAdmin}>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h2 className="text-2xl lg:text-3xl font-display font-bold text-brand-900">Payment Settings</h2>
+        <Button onClick={handleSave} isLoading={isSaving} disabled={!isAdmin} size="sm" className="w-full sm:w-auto">
           <Save size={18} className="mr-2" />
           Save Changes
         </Button>

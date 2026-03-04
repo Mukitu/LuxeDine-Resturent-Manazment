@@ -59,7 +59,7 @@ export const CustomerMenu = () => {
   return (
     <div className="bg-brand-50 min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[60vh] lg:h-[80vh] flex items-center justify-center overflow-hidden">
         <motion.div 
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
@@ -80,21 +80,21 @@ export const CustomerMenu = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <span className="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white text-sm font-bold tracking-widest uppercase mb-6">
+            <span className="inline-block px-3 py-1 lg:px-4 lg:py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white text-[10px] lg:text-sm font-bold tracking-widest uppercase mb-4 lg:mb-6">
               Est. 2026 • Rajshahi
             </span>
-            <h1 className="text-6xl md:text-8xl font-display font-bold text-white mb-8 tracking-tighter leading-none">
+            <h1 className="text-4xl md:text-6xl lg:text-8xl font-display font-bold text-white mb-6 lg:mb-8 tracking-tighter leading-none">
               The Art of <br />
               <span className="text-brand-400">Fine Dining</span>
             </h1>
-            <p className="text-xl text-brand-100 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+            <p className="text-base lg:text-xl text-brand-100 mb-8 lg:mb-10 max-w-2xl mx-auto font-light leading-relaxed">
               Experience a symphony of flavors crafted by world-class chefs in the heart of Rajshahi.
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button size="lg" className="px-10 h-16 text-lg rounded-full">
+            <div className="flex flex-wrap justify-center gap-3 lg:gap-4">
+              <Button size="lg" className="px-6 lg:px-10 h-12 lg:h-16 text-base lg:text-lg rounded-full">
                 Order Now
               </Button>
-              <Button variant="secondary" size="lg" className="px-10 h-16 text-lg rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20">
+              <Button variant="secondary" size="lg" className="px-6 lg:px-10 h-12 lg:h-16 text-base lg:text-lg rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20">
                 View Menu
               </Button>
             </div>
@@ -108,22 +108,22 @@ export const CustomerMenu = () => {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 py-24">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+      <div className="max-w-7xl mx-auto px-4 py-12 lg:py-24">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-8 lg:mb-16 gap-8">
           <div>
-            <h2 className="text-4xl font-display font-bold text-brand-900 mb-4 tracking-tight">Our Culinary Selection</h2>
-            <p className="text-brand-500 max-w-md">
+            <h2 className="text-3xl lg:text-4xl font-display font-bold text-brand-900 mb-2 lg:mb-4 tracking-tight">Our Culinary Selection</h2>
+            <p className="text-brand-500 max-w-md text-sm lg:text-base">
               From locally sourced ingredients to exotic spices, every dish tells a unique story.
             </p>
           </div>
           
-          <div className="flex overflow-x-auto gap-2 p-1 bg-brand-100 rounded-2xl no-scrollbar">
+          <div className="flex overflow-x-auto gap-2 p-1 bg-brand-100 rounded-2xl no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
                 className={cn(
-                  "px-6 py-3 rounded-xl whitespace-nowrap transition-all font-bold text-sm",
+                  "px-4 lg:px-6 py-2 lg:py-3 rounded-xl whitespace-nowrap transition-all font-bold text-xs lg:text-sm",
                   activeCategory === cat.id 
                     ? "bg-white text-brand-950 shadow-sm" 
                     : "text-brand-500 hover:text-brand-900"
@@ -135,7 +135,7 @@ export const CustomerMenu = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
           <AnimatePresence mode="popLayout">
             {filteredItems.map((item) => (
               <motion.div
@@ -148,27 +148,27 @@ export const CustomerMenu = () => {
                 className="group"
               >
                 <Card className="p-0 overflow-hidden h-full flex flex-col border-none shadow-none bg-transparent">
-                  <div className="relative h-[400px] overflow-hidden rounded-3xl mb-6">
+                  <div className="relative h-[300px] lg:h-[400px] overflow-hidden rounded-3xl mb-6">
                     <img 
                       src={item.image_url || 'https://picsum.photos/seed/food/800/600'} 
                       alt={item.name} 
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       referrerPolicy="no-referrer"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <div className="absolute bottom-6 left-6 right-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex flex-col gap-2">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="absolute bottom-4 left-4 right-4 lg:bottom-6 lg:left-6 lg:right-6 lg:translate-y-4 opacity-100 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 transition-all duration-500 flex flex-col gap-2">
                       <Button 
                         onClick={() => setSelectedItem(item)}
                         variant="secondary"
-                        className="w-full h-12 rounded-xl bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30"
+                        className="w-full h-10 lg:h-12 rounded-xl bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30 text-xs lg:text-sm"
                       >
                         View Details
                       </Button>
                       <Button 
                         onClick={() => addItem({ ...item, quantity: 1 })}
-                        className="w-full h-12 rounded-xl bg-white text-brand-900 hover:bg-brand-50"
+                        className="w-full h-10 lg:h-12 rounded-xl bg-white text-brand-900 hover:bg-brand-50 text-xs lg:text-sm"
                       >
-                        <Plus size={20} className="mr-2" />
+                        <Plus size={18} className="mr-2" />
                         Add to Cart
                       </Button>
                     </div>
@@ -461,7 +461,7 @@ export const CartDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                   {orderType === 'dine-in' ? (
                     <div className="space-y-4">
                       <label className="text-sm font-bold text-brand-900 uppercase tracking-wider">Select Table</label>
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                         {tables.length === 0 ? (
                           <p className="col-span-full text-sm text-brand-500 italic">No tables available</p>
                         ) : (
