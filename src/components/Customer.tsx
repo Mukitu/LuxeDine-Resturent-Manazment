@@ -324,6 +324,7 @@ export const CartDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
         food_item_id: item.id,
         quantity: item.quantity,
         unit_price: item.price,
+        subtotal: item.price * item.quantity,
         price_at_time: item.price
       }));
 

@@ -63,8 +63,15 @@ export const Dashboard = () => {
       setIsLoading(true);
       try {
         // Fetch real stats from Supabase
-        const { data: orders } = await supabase.from('orders').select('total_amount, status');
-        const { count: customerCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+        const { data: orders, error: ordersError } = await supabase.from('orders').select('total_amount, status');
+        if (ordersError) {
+          console.error('Orders fetch error:', ordersError);
+        }
+
+        const { count: customerCount, error: profilesError } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+        if (profilesError) {
+          console.error('Profiles fetch error:', profilesError);
+        }
         
         const totalRevenue = orders?.reduce((acc, o) => acc + (o.status === 'completed' ? Number(o.total_amount) : 0), 0) || 0;
         const totalOrders = orders?.length || 0;
@@ -73,10 +80,9 @@ export const Dashboard = () => {
           revenue: totalRevenue,
           orders: totalOrders,
           customers: customerCount || 0,
-          prepTime: 15 // Mock for now as we don't track prep time yet
+          prepTime: 15
         });
 
-        // Empty chart data for now
         setChartData([
           { name: 'Mon', revenue: 0, orders: 0 },
           { name: 'Tue', revenue: 0, orders: 0 },
