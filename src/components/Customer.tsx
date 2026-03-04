@@ -323,6 +323,7 @@ export const CartDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
         order_id: order.id,
         food_item_id: item.id,
         quantity: item.quantity,
+        unit_price: item.price,
         price_at_time: item.price
       }));
 

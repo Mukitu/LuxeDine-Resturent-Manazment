@@ -36,7 +36,7 @@ const StatusBadge = ({ status }: { status: string }) => {
 
 export const OrderManagement = () => {
   const { user } = useAuthStore();
-  const isAdmin = user?.role === 'owner';
+  const isAdmin = user?.role === 'owner' || user?.role === 'manager';
   const [orders, setOrders] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -184,17 +184,38 @@ export const OrderManagement = () => {
                     </div>
                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       {order.status === 'pending' && (
-                        <Button variant="secondary" size="sm" onClick={() => updateStatus(order.id, 'preparing')}>
+                        <Button 
+                          variant="secondary" 
+                          size="sm" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateStatus(order.id, 'preparing');
+                          }}
+                        >
                           Accept
                         </Button>
                       )}
                       {order.status === 'preparing' && (
-                        <Button variant="secondary" size="sm" onClick={() => updateStatus(order.id, 'ready')}>
+                        <Button 
+                          variant="secondary" 
+                          size="sm" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateStatus(order.id, 'ready');
+                          }}
+                        >
                           Ready
                         </Button>
                       )}
                       {order.status === 'ready' && (
-                        <Button variant="secondary" size="sm" onClick={() => updateStatus(order.id, 'completed')}>
+                        <Button 
+                          variant="secondary" 
+                          size="sm" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateStatus(order.id, 'completed');
+                          }}
+                        >
                           Complete
                         </Button>
                       )}
@@ -211,7 +232,16 @@ export const OrderManagement = () => {
                           <Trash2 size={18} />
                         </Button>
                       )}
-                      <Button variant="secondary" size="icon">
+                      <Button 
+                        variant="secondary" 
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm('Cancel this order?')) {
+                            updateStatus(order.id, 'cancelled');
+                          }
+                        }}
+                      >
                         <MoreVertical size={18} />
                       </Button>
                     </div>
