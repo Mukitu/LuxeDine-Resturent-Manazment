@@ -99,16 +99,16 @@ export const CustomerDashboard = () => {
                 <div className="p-6 border-b border-brand-50 flex flex-wrap justify-between items-center gap-4">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-brand-50 rounded-2xl flex items-center justify-center text-brand-900 font-bold">
-                      #{order.id.slice(0, 4)}
+                      #{order.id?.slice(0, 4) || '...'}
                     </div>
                     <div>
                       <p className="text-sm font-bold text-brand-900">
-                        {new Date(order.created_at).toLocaleDateString('en-US', { 
+                        {order.created_at ? new Date(order.created_at).toLocaleDateString('en-US', { 
                           month: 'short', 
                           day: 'numeric', 
                           hour: '2-digit', 
                           minute: '2-digit' 
-                        })}
+                        }) : 'N/A'}
                       </p>
                       <span className={cn(
                         "inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mt-1",

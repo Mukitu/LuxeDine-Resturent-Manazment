@@ -149,7 +149,7 @@ export const OrderManagement = () => {
                     </div>
                     <div>
                       <div className="flex items-center gap-3 mb-1">
-                        <h4 className="font-bold text-lg">#{order.id.slice(0, 8)}</h4>
+                        <h4 className="font-bold text-lg">#{order.id?.slice(0, 8) || '...'}</h4>
                         <StatusBadge status={order.status} />
                         <span className={cn(
                           "px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider",
@@ -179,7 +179,7 @@ export const OrderManagement = () => {
                       <p className="text-lg font-bold text-brand-900">{formatCurrency(order.total_amount)}</p>
                       <p className="text-xs text-brand-400 flex items-center justify-end gap-1">
                         <Clock size={12} />
-                        {new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {order.created_at ? new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A'}
                       </p>
                     </div>
                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">

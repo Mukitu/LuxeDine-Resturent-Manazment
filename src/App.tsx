@@ -22,6 +22,7 @@ import { MenuManagement } from '@/src/components/MenuManagement';
 import { StaffManagement } from '@/src/components/Staff';
 import { PaymentSettings } from '@/src/components/PaymentSettings';
 import { Button, Card, Input } from '@/src/components/UI';
+import { cn } from '@/src/lib/utils';
 
 export default function App() {
   const { user, setUser } = useAuthStore();
@@ -35,6 +36,31 @@ export default function App() {
   const [fullName, setFullName] = useState('');
   const [authError, setAuthError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profile) {
+          setUser({
+            id: profile.id,
+            email: profile.email,
+            full_name: profile.full_name,
+            role: profile.role
+          });
+        }
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [setUser]);
 
   const handleAuth = async () => {
     setIsLoading(true);
@@ -103,7 +129,7 @@ export default function App() {
             <div className="h-4 w-px bg-white/20 mx-2" />
             <Button variant="secondary" className="bg-white/10 border-white/20 text-white hover:bg-white/20" onClick={() => setIsLoginOpen(true)}>Login</Button>
             <button 
-              onClick={() => setIsCartOpen(true)}
+              onClick={() => setCartOpen(true)}
               className="p-4 bg-white text-brand-950 rounded-full relative hover:scale-110 transition-transform shadow-xl"
             >
               <ShoppingBag size={20} />
