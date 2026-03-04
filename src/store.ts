@@ -40,10 +40,12 @@ interface CartItem {
 
 interface CartState {
   items: CartItem[];
+  isCartOpen: boolean;
   addItem: (item: CartItem) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
+  setCartOpen: (isOpen: boolean) => void;
   total: number;
 }
 
@@ -52,6 +54,7 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       items: [],
       total: 0,
+      isCartOpen: false,
       addItem: (item) => {
         const items = [...get().items];
         const existingItem = items.find((i) => i.id === item.id);
@@ -61,7 +64,7 @@ export const useCartStore = create<CartState>()(
           items.push(item);
         }
         const total = items.reduce((acc, i) => acc + i.price * i.quantity, 0);
-        set({ items, total });
+        set({ items, total, isCartOpen: true });
       },
       removeItem: (id) => {
         const items = get().items.filter((i) => i.id !== id);
@@ -76,6 +79,7 @@ export const useCartStore = create<CartState>()(
         set({ items, total });
       },
       clearCart: () => set({ items: [], total: 0 }),
+      setCartOpen: (isCartOpen) => set({ isCartOpen }),
     }),
     {
       name: 'cart-storage',

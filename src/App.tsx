@@ -15,6 +15,7 @@ import { supabase } from '@/src/lib/supabase';
 import { Sidebar, TopBar } from '@/src/components/Layout';
 import { Dashboard } from '@/src/components/Dashboard';
 import { CustomerMenu, CartDrawer } from '@/src/components/Customer';
+import { CustomerDashboard } from '@/src/components/CustomerDashboard';
 import { OrderManagement } from '@/src/components/Orders';
 import { TableManagement } from '@/src/components/Tables';
 import { MenuManagement } from '@/src/components/MenuManagement';
@@ -24,9 +25,9 @@ import { Button, Card, Input } from '@/src/components/UI';
 
 export default function App() {
   const { user, setUser } = useAuthStore();
-  const { items } = useCartStore();
+  const { items, isCartOpen, setCartOpen } = useCartStore();
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [customerTab, setCustomerTab] = useState<'menu' | 'dashboard'>('menu');
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const [loginEmail, setLoginEmail] = useState('');
@@ -156,7 +157,7 @@ export default function App() {
           </div>
         </footer>
 
-        <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+        <CartDrawer isOpen={isCartOpen} onClose={() => setCartOpen(false)} />
 
         {/* Auth Modal */}
         {isLoginOpen && (
@@ -263,16 +264,36 @@ export default function App() {
   return (
     <div className="min-h-screen bg-brand-50">
       <nav className="h-20 bg-white/50 backdrop-blur-md border-b border-brand-100 px-8 flex items-center justify-between sticky top-0 z-50">
-        <h1 className="text-3xl font-display font-bold tracking-tighter text-brand-900">
+        <h1 className="text-3xl font-display font-bold tracking-tighter text-brand-900 cursor-pointer" onClick={() => setCustomerTab('menu')}>
           Luxe<span className="text-brand-500">Dine</span>
         </h1>
         <div className="flex items-center gap-6">
+          <div className="flex gap-4 mr-4">
+            <button 
+              onClick={() => setCustomerTab('menu')}
+              className={cn(
+                "text-sm font-bold uppercase tracking-widest transition-colors",
+                customerTab === 'menu' ? "text-brand-900" : "text-brand-400 hover:text-brand-600"
+              )}
+            >
+              Menu
+            </button>
+            <button 
+              onClick={() => setCustomerTab('dashboard')}
+              className={cn(
+                "text-sm font-bold uppercase tracking-widest transition-colors",
+                customerTab === 'dashboard' ? "text-brand-900" : "text-brand-400 hover:text-brand-600"
+              )}
+            >
+              My Orders
+            </button>
+          </div>
           <div className="flex items-center gap-3 px-4 py-2 bg-brand-100 rounded-full">
             <User size={18} className="text-brand-600" />
             <span className="text-sm font-medium">{user.full_name}</span>
           </div>
           <button 
-            onClick={() => setIsCartOpen(true)}
+            onClick={() => setCartOpen(true)}
             className="p-3 bg-brand-900 text-white rounded-full relative hover:scale-110 transition-transform"
           >
             <ShoppingBag size={20} />
@@ -286,9 +307,9 @@ export default function App() {
         </div>
       </nav>
       <main>
-        <CustomerMenu />
+        {customerTab === 'menu' ? <CustomerMenu /> : <CustomerDashboard />}
       </main>
-      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <CartDrawer isOpen={isCartOpen} onClose={() => setCartOpen(false)} />
     </div>
   );
 }

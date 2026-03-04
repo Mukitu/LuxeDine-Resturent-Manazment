@@ -21,7 +21,8 @@ export const CustomerMenu = () => {
   const [items, setItems] = React.useState<any[]>([]);
   const [categories, setCategories] = React.useState<any[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const { addItem } = useCartStore();
+  const [selectedItem, setSelectedItem] = React.useState<any>(null);
+  const { addItem, isCartOpen, setCartOpen } = useCartStore();
   
   React.useEffect(() => {
     const fetchData = async () => {
@@ -155,10 +156,17 @@ export const CustomerMenu = () => {
                       referrerPolicy="no-referrer"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <div className="absolute bottom-6 left-6 right-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                    <div className="absolute bottom-6 left-6 right-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex flex-col gap-2">
+                      <Button 
+                        onClick={() => setSelectedItem(item)}
+                        variant="secondary"
+                        className="w-full h-12 rounded-xl bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30"
+                      >
+                        View Details
+                      </Button>
                       <Button 
                         onClick={() => addItem({ ...item, quantity: 1 })}
-                        className="w-full h-14 rounded-2xl bg-white text-brand-900 hover:bg-brand-50"
+                        className="w-full h-12 rounded-xl bg-white text-brand-900 hover:bg-brand-50"
                       >
                         <Plus size={20} className="mr-2" />
                         Add to Cart
@@ -189,6 +197,75 @@ export const CustomerMenu = () => {
           </AnimatePresence>
         </div>
       </div>
+
+      <CartDrawer isOpen={isCartOpen} onClose={() => setCartOpen(false)} />
+
+      {/* Product Details Modal */}
+      <AnimatePresence>
+        {selectedItem && (
+          <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedItem(null)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative bg-white rounded-[2.5rem] overflow-hidden max-w-4xl w-full shadow-2xl flex flex-col md:flex-row"
+            >
+              <button 
+                onClick={() => setSelectedItem(null)}
+                className="absolute top-6 right-6 z-10 p-2 bg-white/20 backdrop-blur-md hover:bg-white/40 rounded-full text-white transition-colors"
+              >
+                <X size={24} />
+              </button>
+
+              <div className="md:w-1/2 h-[300px] md:h-auto relative">
+                <img 
+                  src={selectedItem.image_url || 'https://picsum.photos/seed/food/800/600'} 
+                  className="w-full h-full object-cover"
+                  alt={selectedItem.name}
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+
+              <div className="md:w-1/2 p-10 flex flex-col">
+                <div className="mb-8">
+                  <span className="inline-block px-3 py-1 bg-brand-100 text-brand-900 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4">
+                    {categories.find(c => c.id === selectedItem.category_id)?.name || 'Menu Item'}
+                  </span>
+                  <h2 className="text-4xl font-display font-bold text-brand-900 mb-2">{selectedItem.name}</h2>
+                  <p className="text-2xl font-bold text-brand-600">{formatCurrency(selectedItem.price)}</p>
+                </div>
+
+                <div className="flex-1 overflow-y-auto mb-8">
+                  <h4 className="text-sm font-bold text-brand-900 uppercase tracking-wider mb-3">Description</h4>
+                  <p className="text-brand-500 leading-relaxed">
+                    {selectedItem.description || "No description available for this item. Our chefs prepare every dish with the finest ingredients and utmost care to ensure a memorable dining experience."}
+                  </p>
+                </div>
+
+                <div className="flex gap-4">
+                  <Button 
+                    onClick={() => {
+                      addItem({ ...selectedItem, quantity: 1 });
+                      setSelectedItem(null);
+                    }}
+                    className="flex-1 h-16 rounded-2xl text-lg"
+                  >
+                    <Plus size={20} className="mr-2" />
+                    Add to Cart
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -228,7 +305,9 @@ export const CartDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
 
     setIsSubmitting(true);
     try {
+      const { user } = useAuthStore.getState();
       const { data: order, error: orderError } = await supabase.from('orders').insert([{
+        user_id: user?.id || null,
         total_amount: total,
         status: 'pending',
         order_type: orderType,
