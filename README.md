@@ -1,20 +1,89 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+🍽 Restaurant Management System
 
-# Run and deploy your AI Studio app
+A modern Restaurant Management Web Application that helps restaurants manage orders, menus, customers, and daily operations efficiently.
 
-This contains everything you need to run your app locally.
+This system is designed to simplify restaurant workflows and improve service speed.
 
-View your app in AI Studio: https://ai.studio/apps/20a47ec6-f672-4402-9a0a-84d33e687e79
+📌 Features
+🧾 Order Management
 
-## Run Locally
+Create and manage customer orders
 
-**Prerequisites:**  Node.js
+Track order status (Pending, Preparing, Completed)
 
+🍔 Menu Management
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Add new food items
+
+Update price and details
+
+Remove unavailable items
+
+👨‍🍳 Staff Management
+
+Manage staff accounts
+
+Assign roles (Admin, Manager, Waiter)
+
+💳 Billing System
+
+Generate bills automatically
+
+Track daily sales
+
+📊 Dashboard
+
+View restaurant performance
+
+Daily orders overview
+
+Revenue statistics
+
+🛠 Technologies Used
+
+Frontend: React / Next.js / TypeScript
+
+Backend: Node.js / Express.js
+
+Database: Supabase / PostgreSQL
+
+Styling: Tailwind CSS
+
+🚀 Installation
+
+Clone the repository:
+
+git clone https://github.com/yourusername/restaurant-management-system.git
+
+Go to the project directory:
+
+cd restaurant-management-system
+
+Install dependencies:
+
+npm install
+
+Run the project:
+
+npm run dev
+📂 Project Structure
+restaurant-management-system
+│
+├── components
+├── pages
+├── database
+├── api
+└── public
+🎯 Future Features
+
+Online food ordering
+
+QR code menu system
+
+Inventory management
+
+Customer loyalty program
+
+👨‍💻 Author
+
+Developed by MukitX Agency
